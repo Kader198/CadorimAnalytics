@@ -16,6 +16,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/cadorim', [Cadorim_analytics::class ,'index']);
 
+Route::get('/transaction', [Transaction::class, 'index']);
+Route::get('/Ventes',[VentesController::class, 'index']);
+Route::get('/VentesMoyen', [VentesMoyen::class, 'index']);
+
 Route::get('/', function () {
     return view('welcome');
 });

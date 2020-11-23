@@ -84,10 +84,12 @@
 <script>
 // !here is the First canvas { Ventes }
 var ctx = document.getElementById('canvas');
+var data1 = @json($days);
+console.log(data1);
 var myChart = new Chart(ctx, {
     type: 'line',
     data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+        labels: data1,
         datasets: [{
             label: '# of Votes',
             data: [12, 19, 3, 5, 2, 3],
