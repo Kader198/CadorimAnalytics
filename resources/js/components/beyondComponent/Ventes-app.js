@@ -8,6 +8,8 @@ export const Ventes = () => {
     // ! State
     const [chartData,setChartData] = useState({});
     const [loading, setloading] = useState(true);
+    const [dateStart, setDateStart] = useState();
+    const [dateEnd, setDateEnd] = useState();
     let data = {};
     let arrayOfAmount = [];
     let arrayOfdays = [];
@@ -52,14 +54,26 @@ export const Ventes = () => {
             }
         })
     }
+    const loadDates = () => {
+        axios.post('http://localhost:8000/api/dateVentes',{dateEnd,dateStart})
+            .then(response => console.log(response.data))
+            .catch(err => console.log(err))
+    }
+
     useEffect(() => {
-        window.scrollTo(0, 100);
         Chart();
     },[]);
     // ? End of Methods
 
     return (
-        <div className="box">
+        <div className="box text-monospace">
+            <div className='col mt-1'>
+            <label className='badge-info p-2 shadow-sm  rounded-pill text-white'>Date de debut</label>{' '}
+                <input type="date" className="date form-control-sm" onChange={(e) => setDateStart(e.target.value)}/>{' '}{' '}
+            <label className=' badge-info p-2 shadow-sm  rounded-pill text-white mr-2'> Date fin</label>{' '}
+                <input type="date" className="date form-control-sm " onChange={(e) => setDateEnd(e.target.value)}/>
+                <button className='btn btn-outline-info float-right' onClick={loadDates}>Charger les dates :</button>
+            </div>
             {loading ? <Loading height={231} width={100} className='load' type='spin' color='red' /> : <Line data={chartData} width={50} height={14}/>}
         </div>
     )

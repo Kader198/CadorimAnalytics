@@ -53,4 +53,13 @@ class VentesController extends Controller
         return $dates;
     }
 
+    // ! load the dates
+    public function datesloaded(Request $request) {
+        $days = $this->getPeriods($request->get('dateStart'),$request->get('dateEnd'));
+
+        $eachAmount = DB::table('mytable')->select('payment_amount')->whereBetween('updated_at',[$request->get('dateStart'),$request->get('dateEnd')])->get();
+
+        return response()->json(['days'=> $days,'eachAmount' => $eachAmount]);
+    }
+
 }

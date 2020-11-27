@@ -115826,7 +115826,7 @@ var App = function App(props) {
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(true),
       _useState4 = _slicedToArray(_useState3, 2),
       loading = _useState4[0],
-      setloading = _useState4[1]; // ! End of State    
+      setloading = _useState4[1]; // ! End of State
   // ? Methods
 
 
@@ -115834,7 +115834,6 @@ var App = function App(props) {
     axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('http://localhost:8000/commonResults').then(function (response) {
       if (response.status === 200) {
         setloading(true);
-        console.log(response.data);
         setState(response.data);
       }
     });
@@ -115855,14 +115854,6 @@ var App = function App(props) {
   }, "Analyse des ventes ", props.counter, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Des donnes pour vous aider mieux a comprendre et a developper votre societe"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row justify-content-between p-2"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "col"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Date de debut"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    type: "date",
-    className: "date"
-  }), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Date fin"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
-    type: "date",
-    className: "date"
-  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col text-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
     href: "",
@@ -116059,6 +116050,16 @@ var Ventes = function Ventes() {
       loading = _useState4[0],
       setloading = _useState4[1];
 
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
+      _useState6 = _slicedToArray(_useState5, 2),
+      dateStart = _useState6[0],
+      setDateStart = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(),
+      _useState8 = _slicedToArray(_useState7, 2),
+      dateEnd = _useState8[0],
+      setDateEnd = _useState8[1];
+
   var data = {};
   var arrayOfAmount = [];
   var arrayOfdays = [];
@@ -116096,14 +116097,45 @@ var Ventes = function Ventes() {
     });
   };
 
+  var loadDates = function loadDates() {
+    axios__WEBPACK_IMPORTED_MODULE_3___default.a.post('http://localhost:8000/api/dateVentes', {
+      dateEnd: dateEnd,
+      dateStart: dateStart
+    }).then(function (response) {
+      return console.log(response.data);
+    })["catch"](function (err) {
+      return console.log(err);
+    });
+  };
+
   Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
-    window.scrollTo(0, 100);
     Chart();
   }, []); // ? End of Methods
 
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "box"
-  }, loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_loading__WEBPACK_IMPORTED_MODULE_1___default.a, {
+    className: "box text-monospace"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col mt-1"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: "badge-info p-2 shadow-sm  rounded-pill text-white"
+  }, "Date de debut"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "date",
+    className: "date form-control-sm",
+    onChange: function onChange(e) {
+      return setDateStart(e.target.value);
+    }
+  }), ' ', ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+    className: " badge-info p-2 shadow-sm  rounded-pill text-white mr-2"
+  }, " Date fin"), ' ', /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+    type: "date",
+    className: "date form-control-sm ",
+    onChange: function onChange(e) {
+      return setDateEnd(e.target.value);
+    }
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    className: "btn btn-outline-info float-right",
+    onClick: loadDates
+  }, "Charger les dates :")), loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_loading__WEBPACK_IMPORTED_MODULE_1___default.a, {
     height: 231,
     width: 100,
     className: "load",

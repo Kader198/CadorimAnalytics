@@ -25,6 +25,7 @@ Route::get('/commonResults',[Cadorim_analytics::class ,'commonResults']);
 Route::get('/api/Transaction', [TransactionController::class, 'index']);
 Route::get('/api/Ventes',[VentesController::class, 'index']);
 Route::get('/api/VentesMoyen', [VentesMoyen::class, 'index']);
+Route::post('/api/dateVentes',[VentesController::class, 'datesloaded']);
 
 Route::get('/', function () {
     return view('welcome');

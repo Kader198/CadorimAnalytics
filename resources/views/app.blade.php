@@ -15,12 +15,13 @@
             *{
                 font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
             }
+
         </style>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <title>Cadorim analytics :)</title>
     </head>
-    <body>
+    <body class="bg-info">
         {{-- All the content  --}}
             {{-- @yield('content') --}}
         {{-- End of All the content --}}

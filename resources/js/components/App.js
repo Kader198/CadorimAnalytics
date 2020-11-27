@@ -10,22 +10,24 @@ const App = (props) => {
     // ! State
     const [state, setState] = useState({});
     const [loading, setloading] = useState(true);
-    // ! End of State    
+    // ! End of State
+
     // ? Methods
     const getCommonResults = () => {
         axios.get('http://localhost:8000/commonResults')
         .then(response => {
             if (response.status === 200) {
                 setloading(true);
-                console.log(response.data);
                 setState(response.data);
             }
         })
     }
+
     useEffect(() => {
         getCommonResults();
     },[]);
     // ? End of Methods
+
     return (
         <div className="container bg-white ">
             <div className="row border-info">
@@ -35,12 +37,6 @@ const App = (props) => {
                 </div>
             </div>
             <div className="row justify-content-between p-2">
-                <div className="col">
-                            <label>Date de debut</label>{' '}
-                            <input type="date" className="date" />{' '}
-                            <label>Date fin</label>{' '}
-                            <input type="date" className="date" />
-                </div>
                 <div className="col text-right">
                     <a href="" className="btn btn-outline-info">Imprimez <i className="fa fa-print"></i>  <i className=""></i> </a>
                 </div>
