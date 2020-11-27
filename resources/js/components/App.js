@@ -1,32 +1,45 @@
-import React,{useEffect , useState} from 'react';
+import React,{useEffect , useState ,useContext} from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
 import { Container } from './container';
 import { BrowserRouter as Router} from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { Context, ContextProvider } from './beyondComponent/storeRedux/context';
+
 const App = (props) => {
-    const [state, setState] = useState();
-    useEffect(() => {
-        axios.get('http://localhost:8000/Ventes')
+    // ! State
+    const [state, setState] = useState({});
+    const [loading, setloading] = useState(true);
+    // ! End of State    
+    // ? Methods
+    const getCommonResults = () => {
+        axios.get('http://localhost:8000/commonResults')
         .then(response => {
             if (response.status === 200) {
+                setloading(true);
                 console.log(response.data);
+                setState(response.data);
             }
         })
+    }
+    useEffect(() => {
+        getCommonResults();
     },[]);
+    // ? End of Methods
     return (
-        <div className="container bg-white">
-            <div className="row">
+        <div className="container bg-white ">
+            <div className="row border-info">
                 <div className="col text-info text-center mt-2">
-                    <h3 className="display-4">Analyse des ventes </h3>
+                    <h3 className="display-5">Analyse des ventes {props.counter} </h3>
                     <p>Des donnes pour vous aider mieux a comprendre et a developper votre societe</p>
                 </div>
             </div>
             <div className="row justify-content-between p-2">
                 <div className="col">
-                    <div className="col">
-                        <input type="date" className="date form-control-sm border-info" />
-                    </div>
+                            <label>Date de debut</label>{' '}
+                            <input type="date" className="date" />{' '}
+                            <label>Date fin</label>{' '}
+                            <input type="date" className="date" />
                 </div>
                 <div className="col text-right">
                     <a href="" className="btn btn-outline-info">Imprimez <i className="fa fa-print"></i>  <i className=""></i> </a>
@@ -34,20 +47,20 @@ const App = (props) => {
             </div>
             <nav>
                 <div className="nav row-cols-3 nav-tabs" id="nav-tab" role="tablist">
-                  <NavLink activeClassName="active" className="nav-link text-center" to="/cadorim">
+                  <NavLink activeClassName="active bg-info text-white" className="nav-link p-3 text-center" to="/cadorim">
                     <h5>Ventes <i className="fa fa-question-circle "></i></h5>
                     <p>Tout les modes de paiement</p>
-                    <p><button className="btn btn-danger ml-3 rounded-pill"><i className="fa fa-sort-down"></i> -68%</button></p>
+                    <p><button className="btn btn-danger  rounded-pill"><i className="fa fa-sort-down"></i> -38%</button> { state.sumOfeachAmount  } MRU</p>
                   </NavLink>
-                  <NavLink activeClassName="active" className="nav-link text-center" to="/transaction" >
+                  <NavLink activeClassName="active bg-info text-white" className="nav-link p-3 text-center" to="/transaction" >
                     <h5>transaction <i className="fa fa-question-circle"></i></h5>
                     <p>Tout les modes de paiement</p>
-                  <p><button   className="btn btn-danger ml-3 rounded-pill"><i className="fa fa-sort-down"></i> -68%</button></p>
+                    <p><button  className="btn btn-danger ml-3 rounded-pill"><i className="fa fa-sort-down"></i> -20%</button> { state.numOfoperation }</p>
                 </NavLink>
-                  <NavLink activeClassName="active" className="nav-link text-center" to="Moyen">
+                  <NavLink activeClassName="active bg-info text-white" className="nav-link p-3 text-center" to="Moyen">
                     <h5>Prix de vente de moyen <i className="fa fa-question-circle"></i></h5>
                     <p>Tout les modes de paiement</p>
-                  <p><button className="btn btn-danger ml-3 rounded-pill"><i className="fa fa-sort-down"></i> -68%</button> </p>
+                  <p><button className="btn btn-danger ml-3 rounded-pill"><i className="fa fa-sort-down"></i> -25%</button> { state.venteMoyen } MRU </p>
                   </NavLink>
                 </div>
               </nav>
@@ -56,12 +69,17 @@ const App = (props) => {
     );
 }
 
-export default App;
+
+
 
 if (document.getElementById('app')) {
     ReactDOM.render(
         <Router>
-            <App/>
+            <ContextProvider>
+                <App/>
+            </ContextProvider>
         </Router>
-    , document.getElementById('app'));
+    ,document.getElementById('app'));
 }
+
+export default App;

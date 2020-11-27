@@ -30,7 +30,8 @@ class Cadorim_analytics extends Controller
 
         $days = $this->getPeriods('2020-7-10','2020-8-10');
 
-        return view('cadorim.index', compact('Clients','numOfOperation','sumOfeachAmount','venteMoyen','days'));
+        // return view('cadorim.index', compact('Clients','numOfOperation','sumOfeachAmount','venteMoyen','days'));
+        return view('app');
     }
 
     public function getPeriods($debut,$fin){
@@ -42,6 +43,28 @@ class Cadorim_analytics extends Controller
             $courant = strtotime('+1 day',$courant);
         }
         return $dates;
+    }
+
+    public function commonResults(){
+        $numOfOperation = DB::table('mytable')->count();
+
+        $try = DB::table('mytable')->select('updated_at')->whereBetween('updated_at',['2020-06-02','2020-07-03'])->get();
+
+        $sumOfeachAmount = round(DB::table('mytable')->sum('payment_amount'));
+        $venteMoyen =  round($sumOfeachAmount/$numOfOperation);
+        // * Here should we have each collections
+        $Clients = ModelsCadorim_analytics::all();
+
+        $arrayOfDay = array();
+
+        for ($i=0; $i < 25 ; $i++) {
+            $arrayOfDay[$i] = $i + 4;
+        }
+        $now = Carbon::now()->toDateTimeString();
+
+        $days = $this->getPeriods('2020-7-10','2020-8-10');
+
+        return response()->json(['sumOfeachAmount' => $sumOfeachAmount, 'days' => $days,'venteMoyen'=>$venteMoyen,'numOfoperation' => $numOfOperation]);
     }
 
 }

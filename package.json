@@ -28,6 +28,8 @@
         "chart.js": "^2.9.4",
         "react-bootstrap": "^1.4.0",
         "react-chartjs-2": "^2.11.1",
+        "react-charts": "^2.0.0-beta.7",
+        "react-loading": "^2.0.3",
         "react-redux": "^7.2.2",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",

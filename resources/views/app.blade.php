@@ -6,6 +6,16 @@
         <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css">
         <link rel="stylesheet" href="/css/Chart.css"/>
         <link rel="stylesheet" href="/css/app.css"/>
+        <style>
+            .load{
+                margin-top: 40px;
+                margin-left: 495px !important;
+            }
+
+            *{
+                font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+            }
+        </style>
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <title>Cadorim analytics :)</title>

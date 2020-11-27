@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\Cadorim_analytics;
+use App\Http\Controllers\VentesController;
+use App\Http\Controllers\VentesMoyen;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,11 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('*',function(){
+    return redirect('/cadorim');
+});
 Route::get('/cadorim', [Cadorim_analytics::class ,'index']);
-
-Route::get('/transaction', [Transaction::class, 'index']);
-Route::get('/Ventes',[VentesController::class, 'index']);
-Route::get('/VentesMoyen', [VentesMoyen::class, 'index']);
+Route::get('/commonResults',[Cadorim_analytics::class ,'commonResults']);
+Route::get('/api/Transaction', [TransactionController::class, 'index']);
+Route::get('/api/Ventes',[VentesController::class, 'index']);
+Route::get('/api/VentesMoyen', [VentesMoyen::class, 'index']);
 
 Route::get('/', function () {
     return view('welcome');
