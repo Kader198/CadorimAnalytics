@@ -1,4 +1,5 @@
 {
     "editor.fontFamily": "\"JetBrains Mono\"",
-    "files.autoSave": "onWindowChange"
+    "files.autoSave": "onWindowChange",
+    "editor.formatOnSave": true
 }

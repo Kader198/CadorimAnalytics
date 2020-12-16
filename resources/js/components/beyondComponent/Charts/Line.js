@@ -1,33 +1,66 @@
-import React from 'react';
-import { Line } from 'react-chartjs-2';
-export const LineA = (props) => {
-    console.log(props.arrayOfAmount,props.days)
-    const data = {
-            labels: props.arrayOfAmount,
-            datasets: [{
-                label: 'les ventes ',
-                data: props.days,
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        }
+import React,{useState ,useEffect} from 'react';
+import { Chart } from 'react-google-charts';
+
+export const Line = () => {
+
+    const [state, setState] = useState({Chart: []})
+
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/Ventes')
+        .then((response) => {
+                    let arrayOfdays = [];
+                    let data = {};
+                    let arrayOfAmount = [];
+                    let arrayOfAll = [];
+                    data = response.data.amountsPerDays;
+                    arrayOfdays = data.map(ele => ele.days)
+                    arrayOfAmount = data.map(ele => ele.payment_amount)
+                    arrayOfAll = arrayOfAmount.map((element,index) => {
+                        return [element,arrayOfdays[index]]
+                    });
+                    setState({Chart: arrayOfAll})
+                    console.log(state,'chart state ');
+
+                })}
+        , [])
 
     return (
-        <Line data={data} width={50} height={14}/>
+        <Chart
+            width={'100%'}
+            chartType="LineChart"
+            loader={<div>Loading Chart</div>}
+            data={state.Chart}
+            options={{
+                // Use the same chart area width as the control for axis alignment.
+                chartArea: { height: '80%', width: '90%' },
+                hAxis: { slantedText: false },
+                vAxis: { viewWindow: { min: 0, max: 2000 } },
+                legend: { position: 'none' },
+            }}
+            rootProps={{ 'data-testid': '3' }}
+            chartPackages={['corechart', 'controls']}
+            controls={[
+                {
+                controlType: 'ChartRangeFilter',
+                options: {
+                    filterColumnIndex: 0,
+                    ui: {
+                    chartType: 'LineChart',
+                    chartOptions: {
+                        chartArea: { width: '90%', height: '50%' },
+                        hAxis: { baselineColor: 'none' },
+                    },
+                    },
+                },
+                controlPosition: 'bottom',
+                controlWrapperParams: {
+                    state: {
+                    range: {
+                        start: 1, end: 10000000  },
+                    },
+                },
+                },
+            ]}
+            />
     )
 }

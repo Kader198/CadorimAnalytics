@@ -17,16 +17,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('*',function(){
-    return redirect('/cadorim');
-});
-Route::get('/cadorim', [Cadorim_analytics::class ,'index']);
-Route::get('/commonResults',[Cadorim_analytics::class ,'commonResults']);
+// Route::get('*', function () {
+//     return redirect('/cadorim');
+// });
+Route::get('/cadorim', [Cadorim_analytics::class, 'index']);
+Route::get('/commonResults', [Cadorim_analytics::class, 'commonResults']);
 Route::get('/api/Transaction', [TransactionController::class, 'index']);
-Route::get('/api/Ventes',[VentesController::class, 'index']);
+Route::get('/api/Ventes', [VentesController::class, 'index']);
 Route::get('/api/VentesMoyen', [VentesMoyen::class, 'index']);
-Route::post('/api/dateVentes',[VentesController::class, 'datesloaded']);
+Route::post('/api/dateVentes', [VentesController::class, 'datesloaded']);
+Route::post('/api/dateTransaction', [TransactionController::class, 'datesloaded']);
+Route::post('/api/dateVenteMoyen', [VentesMoyen::class, 'datesloaded']);
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+
+Route::fallback(function () {
+    return redirect('/cadorim');
 });

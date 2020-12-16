@@ -55,6 +55,8 @@ class Cadorim_analytics extends Controller
         // * Here should we have each collections
         $Clients = ModelsCadorim_analytics::all();
 
+        $moyen = DB::table('mytable')->avg('payment_amount');
+
         $arrayOfDay = array();
 
         for ($i=0; $i < 25 ; $i++) {
@@ -64,7 +66,7 @@ class Cadorim_analytics extends Controller
 
         $days = $this->getPeriods('2020-7-10','2020-8-10');
 
-        return response()->json(['sumOfeachAmount' => $sumOfeachAmount, 'days' => $days,'venteMoyen'=>$venteMoyen,'numOfoperation' => $numOfOperation]);
+        return response()->json(['sumOfeachAmount' => $sumOfeachAmount, 'days' => $days,'venteMoyen'=>$venteMoyen,'numOfoperation' => $numOfOperation,'moyen'=>$moyen]);
     }
 
 }

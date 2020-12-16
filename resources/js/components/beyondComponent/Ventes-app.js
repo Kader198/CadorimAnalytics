@@ -1,80 +1,167 @@
-import React,{useEffect ,useContext , useState} from 'react';
+import React,{useEffect ,useContext , useState,useRef} from 'react';
 import Loading from 'react-loading';
+import ReactTooltip from 'react-tooltip';
 import { Line } from 'react-chartjs-2';
+import { FullScreen,useFullScreenHandle } from 'react-full-screen';
 import axios from 'axios';
 import { Context } from './storeRedux/context';
+import { DatePicker } from './DatePicker';
+import moment from 'moment';
+import { DateRangePicker } from 'react-dates';
 
-export const Ventes = () => {
-    // ! State
-    const [chartData,setChartData] = useState({});
-    const [loading, setloading] = useState(true);
-    const [dateStart, setDateStart] = useState();
-    const [dateEnd, setDateEnd] = useState();
-    let data = {};
-    let arrayOfAmount = [];
-    let arrayOfdays = [];
-    const {state,dispatch} = useContext(Context);
-    // ! End of State
+
+export class Ventes extends React.Component {
+    constructor(props) {
+        super(props);
+            this.state = {
+                startDate: moment().subtract(30, 'days'),
+                endDate: moment(),
+                message:'',
+                DatesSelected:false,
+                focusedInput: null,
+                chartData: {},
+                loading: true,
+                chartOptions: {
+                    scales:{
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            }
+        }
 
     // ? Methods
-    const Chart = () => {
-        console.log(state,dispatch);
+    Chartt() {
         axios.get('http://localhost:8000/api/Ventes')
         .then((response) => {
-            if(response.status === 200) {
-                console.log(response.data);
-                data = response.data;
-                setloading(false);
-                arrayOfdays = data.days.map((amount) => parseInt(amount));
-                arrayOfAmount = data.eachAmount.map((amount) => parseInt(amount.payment_amount));
-                setChartData({
-                    labels: arrayOfdays,
-                    datasets: [{
-                        label: 'les ventes ',
-                        data: arrayOfAmount,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                })
-            }
+                    let arrayOfdays = [];
+                    let data = {};
+                    let arrayOfAmount = [];
+                    data = response.data.amountsPerDays;
+                    console.log(data);
+                    arrayOfdays = data.map((amount) => amount.days);
+                    arrayOfAmount = data.map((amount) => {
+                        return amount.payment_amount === [] ? 0 : amount.payment_amount;
+                    });
+                    this.setState({chartData:
+                        {
+                            labels: arrayOfdays,
+                            datasets: [{
+                                label: 'les ventes ',
+                                data: arrayOfAmount,
+                                backgroundColor: [
+                                    'rgba(230, 255, 253,0.5)',
+                                ],
+                                borderColor: [
+                                    'rgb(8, 32, 252)',
+                                ],
+                                borderWidth: 2
+                            }],
+                        },loading:false
+                        ,DatesSelected:false,
+                        message: `Dernieres 30 jours .....`
+                    })
         })
     }
-    const loadDates = () => {
-        axios.post('http://localhost:8000/api/dateVentes',{dateEnd,dateStart})
-            .then(response => console.log(response.data))
-            .catch(err => console.log(err))
+
+    //? End of Methods
+
+    componentDidMount(){
+        this.Chartt();
     }
 
-    useEffect(() => {
-        Chart();
-    },[]);
-    // ? End of Methods
+    render() {
+        if(this.state.DatesSelected === true && this.state.startDate !== null && this.state.endDate !== null){
+            console.log('Work fine for me ');
+            let dateStart,dateEnd = '';
+            let { startDate,endDate } = this.state;
+            dateStart = startDate.format('Y-M-D');
+            dateEnd = endDate.format('Y-M-D');
+            console.log(dateStart,dateEnd);
+            axios.post('http://localhost:8000/api/dateVentes',{dateEnd,dateStart})
+                .then(response => {
+                    if(response.status === 200) {
+                        let data = {};
+                        let arrayOfdays = [];
+                        let arrayOfAmount = [];
+                        data = response.data.amountsPerDays;
+                        arrayOfdays = data.map((amount) => amount.days);
+                        arrayOfAmount = data.map((amount) => {
+                            return amount.payment_amount === [] ? 0 : amount.payment_amount;
+                        });
+                        console.log("the state of posted data ",arrayOfdays,arrayOfAmount);
+                        this.setState(
+                            {chartData: {
+                            labels: arrayOfdays,
+                            datasets: [{
+                                label: 'les ventes ',
+                                data: arrayOfAmount,
+                                backgroundColor: [
+                                    'rgba(230, 255, 253,0.5)',
+                                ],
+                                borderColor: [
+                                    'rgb(8, 32, 252)',
+                                ],
+                                borderWidth: 2
+                            }]
+                            },
+                            loading:false ,
+                            message: `Du ${this.state.startDate.format('LL')} a ${this.state.endDate.format('LL')}`
+                        })
+                        }
+                })
+                .catch(err => console.log(err))
 
-    return (
-        <div className="box text-monospace">
-            <div className='col mt-1'>
-            <label className='badge-info p-2 shadow-sm  rounded-pill text-white'>Date de debut</label>{' '}
-                <input type="date" className="date form-control-sm" onChange={(e) => setDateStart(e.target.value)}/>{' '}{' '}
-            <label className=' badge-info p-2 shadow-sm  rounded-pill text-white mr-2'> Date fin</label>{' '}
-                <input type="date" className="date form-control-sm " onChange={(e) => setDateEnd(e.target.value)}/>
-                <button className='btn btn-outline-info float-right' onClick={loadDates}>Charger les dates :</button>
-            </div>
-            {loading ? <Loading height={231} width={100} className='load' type='spin' color='red' /> : <Line data={chartData} width={50} height={14}/>}
-        </div>
-    )
+            this.setState({DatesSelected: false})
+        }
+
+        return (
+            <div className="box text-monospace ">
+                {this.state.loading ?
+                <Loading height={231} width={100} className='load' type='spin' color='red' />
+                :
+                            <div className='bg-white'>
+                            <div className='row bg-white row-cols-3'>
+                                <div className="col-6 p-3 ">
+                                    <p className='txt text-center ml-5 p-2 mt-3 badge-info  text-white shadow-sm'>
+                                        {this.state.message}
+                                    </p>
+                                </div>
+                                <div className='col-6 mb-3 pl-5 mt-4' >
+                                    <div data-tip={'Selectionner deux dates'}>
+                                    <DateRangePicker
+                                        customInputIcon={<i className='fa fa-calendar text-info'></i>}
+                                        startDatePlaceholderText={'Date Debut'}
+                                        endDatePlaceholderText={"Date Fin"}
+                                        startDate={this.state.startDate} // momentPropTypes.momentObj or null,
+                                        startDateId="your_unique_start_date_id" // PropTypes.string.isRequired,
+                                        endDate={this.state.endDate} // momentPropTypes.momentObj or null,
+                                        endDateId="your_unique_end_date_id" // PropTypes.string.isRequired,
+                                        onDatesChange={({ startDate, endDate }) => this.setState({ startDate: startDate, endDate: endDate ,DatesSelected: true})} // PropTypes.func.isRequired,
+                                        focusedInput={this.state.focusedInput} // PropTypes.oneOf([START_DATE, END_DATE]) or null,
+                                        onFocusChange={focusedInput => this.setState({ focusedInput: focusedInput })} // PropTypes.func.isRequired,
+                                        showClearDates={true}
+                                        isOutsideRange={() => false}
+                                        />
+                                    </div>
+                                    <ReactTooltip delayHide={1000} />
+                                </div>
+                            </div>
+                                <Line data={this.state.chartData} width={50} height={14} options={this.state.chartOptions}/>
+                            </div>
+
+                }
+                    </div>
+        )
+    }
 }
+
+
+
+
+
+
+

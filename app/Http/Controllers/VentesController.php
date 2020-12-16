@@ -21,9 +21,6 @@ class VentesController extends Controller
 
         $arrayOfDay = array();
 
-        for ($i=0; $i < 25 ; $i++) {
-            $arrayOfDay[$i] = $i + 4;
-        }
 
         $nowString = Carbon::now()->toDateTimeString();
 
@@ -35,31 +32,28 @@ class VentesController extends Controller
 
         $today = date("Y-m-d",strtotime($nowString));
 
-        $days = $this->getPeriods($days31,$today);
+        $days = $this->getAmountsPerDays($days31,$today);
 
-        $eachAmount = DB::table('mytable')->select('payment_amount')->whereBetween('updated_at',[$days31,$today])->get();
-
-        return response()->json(['days'=> $days,'sumOfall' => $sumOfeachAmount,'venteMoyen' => $venteMoyen,'today' => $today,'daysO' => $days31,'eachAmount' => $eachAmount]);
+        return response()->json(['amountsPerDays'=> $days]);
     }
 
-    public function getPeriods($debut,$fin){
-        $dates = array();
+    public function getAmountsPerDays($debut,$fin){
+        $amountDays = array();
         $courant = strtotime($debut);
         $dernier = strtotime($fin);
         while ($courant <=  $dernier) {
-            $dates[] = date('d',$courant);
+            $payment_amount = DB::table('mytable')->where('updated_at','like', date('Y-m-d',$courant) .'%')->sum('payment_amount');
+            $amountDays[] = ['days' => date('d F',$courant),'payment_amount' => $payment_amount == [] ? 0 : $payment_amount];
             $courant = strtotime('+1 day',$courant);
         }
-        return $dates;
+        return $amountDays;
     }
 
     // ! load the dates
     public function datesloaded(Request $request) {
-        $days = $this->getPeriods($request->get('dateStart'),$request->get('dateEnd'));
-
-        $eachAmount = DB::table('mytable')->select('payment_amount')->whereBetween('updated_at',[$request->get('dateStart'),$request->get('dateEnd')])->get();
-
-        return response()->json(['days'=> $days,'eachAmount' => $eachAmount]);
+        $days = $this->getAmountsPerDays($request->get('dateStart'),$request->get('dateEnd'));
+        return response()->json(['amountsPerDays'=> $days]);
     }
+    //! End of loading the dates
 
 }

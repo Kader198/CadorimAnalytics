@@ -11,7 +11,7 @@ export const Container = (props) => {
             <Route path={"/cadorim"} exact component={Ventes}/>
             <Route path={"/transaction"} component={Transaction}/>
             <Route path={"/Moyen"} component={Moyen}/>
-            <Route path='/*' exact={true} component={My404Component} />
+            <Route path={'/*'}  component={My404Component} />
         </Switch>
     );
 }
