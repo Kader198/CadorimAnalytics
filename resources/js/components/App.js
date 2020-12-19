@@ -1,12 +1,12 @@
 import 'react-dates/initialize';
-import React,{useEffect , useState  ,useRef} from 'react';
+import React,{useEffect , useState,useContext  ,useRef} from 'react';
 import ReactDOM from 'react-dom';
 import { useReactToPrint } from 'react-to-print';
 import axios from 'axios';
 import { Container } from './container';
 import { BrowserRouter as Router} from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import { ContextProvider } from './beyondComponent/storeRedux/context';
+import { Context, ContextProvider } from './beyondComponent/storeRedux/context';
 import 'react-dates/lib/theme/DefaultTheme';
 import './App.css';
 import 'react-dates/lib/css/_datepicker.css';
@@ -17,6 +17,7 @@ import { Tab } from 'bootstrap';
 import { FullScreen, useFullScreenHandle } from 'react-full-screen';
 import { motion } from 'framer-motion'
 import { Line } from './beyondComponent/Charts/Line';
+import Button from '@material-ui/core/Button'
 
 const App = (props) => {
     // * Elements with references
@@ -91,9 +92,9 @@ const App = (props) => {
                 </div>
                 <Container/>
             </FullScreen>
-            {/* <div className="row ">
+            <div className="row ">
                 <Line />
-            </div> */}
+            </div>
         </div>
         </motion.div>
     );

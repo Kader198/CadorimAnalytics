@@ -4,6 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         {{-- <link rel="stylesheet" href="/bootstrap/dist/css/bootstrap.css"> --}}
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100&display=swap" rel="stylesheet">
+
         <link rel="stylesheet" href="{{ asset("/css/Chart.css") }}"/>
         <link rel="stylesheet" href="{{ asset("/css/app.css") }}"/>
         <style>
@@ -13,8 +16,8 @@
             }
 
             *{
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-                outline: none;
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                outline: none !important;
             }
 
 

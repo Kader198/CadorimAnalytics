@@ -109,7 +109,7 @@ export class Ventes extends React.Component {
                             }]
                             },
                             loading:false ,
-                            message: `Du ${this.state.startDate.format('LL')} a ${this.state.endDate.format('LL')}`
+                            message: `Du ${this.state.startDate.format('LLLL')} a ${this.state.endDate.format('LLLL')}`
                         })
                         }
                 })
@@ -131,7 +131,7 @@ export class Ventes extends React.Component {
                                     </p>
                                 </div>
                                 <div className='col-6 mb-3 pl-5 mt-4' >
-                                    <div data-tip={'Selectionner deux dates'}>
+                                    <div >
                                     <DateRangePicker
                                         customInputIcon={<i className='fa fa-calendar text-info'></i>}
                                         startDatePlaceholderText={'Date Debut'}
@@ -147,7 +147,7 @@ export class Ventes extends React.Component {
                                         isOutsideRange={() => false}
                                         />
                                     </div>
-                                    <ReactTooltip delayHide={1000} />
+                                    {/* <ReactTooltip delayHide={1000} /> */}
                                 </div>
                             </div>
                                 <Line data={this.state.chartData} width={50} height={14} options={this.state.chartOptions}/>
